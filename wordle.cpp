@@ -129,7 +129,7 @@ public:
             for (size_t i = 0; i < 5; i++)
             {
                 int findNum = mapWord.find(in[i]);
-                if (findNum == i)
+                if (in[i] == mapWord[i])
                 {
                     letterCondition[cnt][i] = GREEN;
                     mapWord[findNum] = '#';
@@ -294,6 +294,7 @@ void runFrame()
         word.wordInput(in, i);
     }
 
+    printWordle(word);
     if (!word.getIsWin())
     {
         cout << "\n\n"
