@@ -111,12 +111,12 @@ public:
         importWord.close();
     }
 
-    void wordInput(string in,int cnt)
+    void wordInput(string in, int cnt)
     {
         transform(in.begin(), in.end(), in.begin(), ::toupper);
         input.push_back(in);
         transform(in.begin(), in.end(), in.begin(), ::tolower);
-        
+
         if (in.compare(word) == 0)
         {
             for (size_t i = 0; i < 5; i++)
@@ -125,22 +125,35 @@ public:
         }
         else
         {
+            string mapWord(word);
             for (size_t i = 0; i < 5; i++)
             {
-                int findNum = word.find(in[i]);
-                if (findNum == -1)
-                {
-                    letterCondition[cnt][i] = GREY;
-                }
-                else if (findNum != i)
-                {
-                    letterCondition[cnt][i] = YELLOW;
-                }
-                else
+                int findNum = mapWord.find(in[i]);
+                if (findNum == i)
                 {
                     letterCondition[cnt][i] = GREEN;
+                    mapWord[findNum] = '#';
+                    in[i] = '#';
+                }
+                else if (findNum == -1)
+                {
+                    letterCondition[cnt][i] = GREY;
+                    in[i] = '#';
                 }
             }
+            for (size_t i = 0; i < 5; i++)
+            {
+                if (in[i] == '#') continue;
+                int findNum = mapWord.find(in[i]);
+                if (findNum >= 0 && findNum != i)
+                {
+                    letterCondition[cnt][i] = YELLOW;
+                    mapWord[findNum] = '#';
+                }
+                else if(findNum == -1)
+                    letterCondition[cnt][i] = GREY;
+            }
+            
         }
     }
 
@@ -149,7 +162,7 @@ public:
         return input.size();
     }
 
-    int getLetterCondition(int i,int j)
+    int getLetterCondition(int i, int j)
     {
         return letterCondition[i][j];
     }
@@ -159,11 +172,13 @@ public:
         return input[i];
     }
 
-    bool getIsWin(){
+    bool getIsWin()
+    {
         return isWin;
     }
-    
-    string getWord(){
+
+    string getWord()
+    {
         return word;
     }
 };
@@ -235,14 +250,14 @@ void printWordle(WordInWordle word)
     if (word.getInputNum() != 0)
     {
         cout << "=====================" << endl;
-        for (size_t i = 0; i < word.getInputNum(); i++)//第几个输入单词
+        for (size_t i = 0; i < word.getInputNum(); i++) //第几个输入单词
         {
-            for (size_t k = 0; k < 3; k++)//行数
+            for (size_t k = 0; k < 3; k++) //行数
             {
                 cout << '|';
-                for (size_t j = 0; j < 5; j++)//第几格
+                for (size_t j = 0; j < 5; j++) //第几格
                 {
-                    color(word.getLetterCondition(i,j));
+                    color(word.getLetterCondition(i, j));
                     if (k != 1)
                         cout << "   ";
                     else
@@ -256,7 +271,6 @@ void printWordle(WordInWordle word)
             }
             cout << "=====================" << endl;
         }
-
     }
 }
 
@@ -269,32 +283,37 @@ void runFrame()
     for (int i = 0; i < 6; i++)
     {
         printWordle(word);
-        if (word.getIsWin()) break;
+        if (word.getIsWin())
+            break;
         string in;
         do
         {
             cout << "> ";
             cin >> in;
         } while (!wordJudgeLegal(in));
-        word.wordInput(in,i);
+        word.wordInput(in, i);
     }
 
     if (!word.getIsWin())
     {
-        cout << "\n\n" << "======================================================" << endl;
+        cout << "\n\n"
+             << "======================================================" << endl;
         cout << "You lose!" << endl;
         cout << "The correct word is \"" << word.getWord() << "\"" << endl;
-        cout << "======================================================" << "\n\n";
-        system("pause");
-    }else
-    {
-        cout << "\n\n" << "======================================================" << endl;
-        cout << "You win! Congratulation!" << endl;
-        cout << "You guess out the hidden word within " << word.getInputNum() << " tries!" << endl;
-        cout << "======================================================" << "\n\n";
+        cout << "======================================================"
+             << "\n\n";
         system("pause");
     }
-    
+    else
+    {
+        cout << "\n\n"
+             << "======================================================" << endl;
+        cout << "You win! Congratulation!" << endl;
+        cout << "You guess out the hidden word within " << word.getInputNum() << " tries!" << endl;
+        cout << "======================================================"
+             << "\n\n";
+        system("pause");
+    }
 }
 
 int main()
