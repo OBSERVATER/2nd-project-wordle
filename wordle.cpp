@@ -258,15 +258,6 @@ void printWordle(WordInWordle word)
         }
 
     }
-    if (word.getIsWin())
-    {
-        cout << "\n\n" << "======================================================" << endl;
-        cout << "You win! Congratulation!" << endl;
-        cout << "You guess out the hidden word within " << word.getInputNum() << " tries!" << endl;
-        cout << "======================================================" << "\n\n";
-        system("pause");
-    }
-    
 }
 
 void runFrame()
@@ -293,6 +284,13 @@ void runFrame()
         cout << "\n\n" << "======================================================" << endl;
         cout << "You lose!" << endl;
         cout << "The correct word is \"" << word.getWord() << "\"" << endl;
+        cout << "======================================================" << "\n\n";
+        system("pause");
+    }else
+    {
+        cout << "\n\n" << "======================================================" << endl;
+        cout << "You win! Congratulation!" << endl;
+        cout << "You guess out the hidden word within " << word.getInputNum() << " tries!" << endl;
         cout << "======================================================" << "\n\n";
         system("pause");
     }
