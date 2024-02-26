@@ -231,7 +231,7 @@ void printWordle(WordInWordle word)
          << endl;
 
     //以下是输出用户记录
-    cout << word.getWord() << endl;
+    //cout << word.getWord() << endl;
     if (word.getInputNum() != 0)
     {
         cout << "=====================" << endl;
