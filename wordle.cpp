@@ -68,7 +68,7 @@ class WordInWordle
 private:
     string word;
     vector<string> input;
-    int wordNum[25] = {140, 173, 198, 111, 72, 135, 115, 69, 34, 20, 20, 87, 107, 37, 41, 141, 23, 105, 365, 149, 33, 43, 82, 6, 3};
+    int wordNum[25] = {140, 173, 198, 111, 72, 135, 115, 69, 34, 20, 20, 87, 107, 37, 41, 141, 23, 105, 366, 149, 33, 43, 82, 6, 3};
     int letterCondition[6][5]; // COLOR数字
     bool isWin = false;
 
@@ -231,10 +231,10 @@ void printWordle(WordInWordle word)
          << endl;
 
     //以下是输出用户记录
-    //cout << word.getWord() << endl;
+    cout << word.getWord() << endl;
     if (word.getInputNum() != 0)
     {
-        cout << "____________________" << endl;
+        cout << "=====================" << endl;
         for (size_t i = 0; i < word.getInputNum(); i++)//第几个输入单词
         {
             for (size_t k = 0; k < 3; k++)//行数
@@ -254,7 +254,7 @@ void printWordle(WordInWordle word)
                 }
                 cout << endl;
             }
-            cout << "-------------------" << endl;
+            cout << "=====================" << endl;
         }
 
     }
@@ -287,12 +287,12 @@ void runFrame()
         } while (!wordJudgeLegal(in));
         word.wordInput(in,i);
     }
-    
+
     if (!word.getIsWin())
     {
         cout << "\n\n" << "======================================================" << endl;
         cout << "You lose!" << endl;
-        cout << "The correct word is \"" << word.getInputNum() << "\"" << endl;
+        cout << "The correct word is \"" << word.getWord() << "\"" << endl;
         cout << "======================================================" << "\n\n";
         system("pause");
     }
