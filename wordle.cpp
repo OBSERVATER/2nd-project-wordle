@@ -2,6 +2,9 @@
 #include <windows.h>
 using namespace std;
 
+#define LETTERNUM 5
+#define TRIES 6
+
 #define GREEN 303
 #define GREY 399
 #define YELLOW 367
@@ -69,16 +72,21 @@ private:
     string word;
     vector<string> input;
     int wordNum[25] = {140, 173, 198, 111, 72, 135, 115, 69, 34, 20, 20, 87, 107, 37, 41, 141, 23, 105, 366, 149, 33, 43, 82, 6, 3};
-    int letterCondition[6][5]; // COLOR数字
+    int letterCondition[TRIES][LETTERNUM]; // COLOR数字
     bool isWin = false;
-
+    map<char,int> inputRecord;
+    string inputRecordExcel;
 public:
     void init()
     {
         word.clear();
         input.clear();
         memset(letterCondition, 0, sizeof(letterCondition));
+        inputRecordExcel = "QWERTYUIOPASDFGHJKLZXCVBNM";
         isWin = false;
+        for (size_t i = 0; i < 26; i++)
+            inputRecord[inputRecordExcel[i]] = INIT;
+        
     }
 
     void wordSpawn()
@@ -114,19 +122,20 @@ public:
     void wordInput(string in, int cnt)
     {
         transform(in.begin(), in.end(), in.begin(), ::toupper);
+        string inCopy(in);
         input.push_back(in);
         transform(in.begin(), in.end(), in.begin(), ::tolower);
 
         if (in.compare(word) == 0)
         {
-            for (size_t i = 0; i < 5; i++)
+            for (size_t i = 0; i < LETTERNUM; i++)
                 letterCondition[cnt][i] = GREEN;
             isWin = true;
         }
         else
         {
             string mapWord(word);
-            for (size_t i = 0; i < 5; i++)
+            for (size_t i = 0; i < LETTERNUM; i++)
             {
                 int findNum = mapWord.find(in[i]);
                 if (in[i] == mapWord[i])
@@ -141,7 +150,7 @@ public:
                     in[i] = '#';
                 }
             }
-            for (size_t i = 0; i < 5; i++)
+            for (size_t i = 0; i < LETTERNUM; i++)
             {
                 if (in[i] == '#') continue;
                 int findNum = mapWord.find(in[i]);
@@ -153,8 +162,13 @@ public:
                 else if(findNum == -1)
                     letterCondition[cnt][i] = GREY;
             }
-            
         }
+
+        for (size_t i = 0; i < LETTERNUM; i++)
+            {
+                inputRecord[inCopy[i]] = inputRecord[inCopy[i]] == INIT ? GREY : inputRecord[inCopy[i]];
+                inputRecord[inCopy[i]] = min(letterCondition[cnt][i],inputRecord[inCopy[i]]);
+            }
     }
 
     int getInputNum()
@@ -181,11 +195,15 @@ public:
     {
         return word;
     }
+
+    int getInputRecord(char i){
+        return inputRecord[i];
+    }
 };
 
 bool wordJudgeLegal(string in)
 {
-    if (in.size() != 5)
+    if (in.size() != LETTERNUM)
     {
         cout << "The amount of letter is not 5!" << endl
              << endl;
@@ -193,7 +211,7 @@ bool wordJudgeLegal(string in)
     }
     else
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < LETTERNUM; i++)
         {
             if (!((in[i] >= 'a' && in[i] <= 'z') || (in[i] >= 'A' && in[i] <= 'Z')))
             {
@@ -247,15 +265,21 @@ void printWordle(WordInWordle word)
 
     //以下是输出用户记录
     //cout << word.getWord() << endl;
+    vector<string> tempMap;
+    tempMap.push_back("QWERTYUIOP");
+    tempMap.push_back("ASDFGHJKL");
+    tempMap.push_back("ZXCVBNM");
+
     if (word.getInputNum() != 0)
     {
-        cout << "=====================" << endl;
+        cout << "=====================";
+        cout << "\t\t\tKeyboard:" << endl;
         for (size_t i = 0; i < word.getInputNum(); i++) //第几个输入单词
         {
             for (size_t k = 0; k < 3; k++) //行数
             {
                 cout << '|';
-                for (size_t j = 0; j < 5; j++) //第几格
+                for (size_t j = 0; j < LETTERNUM; j++) //第几格
                 {
                     color(word.getLetterCondition(i, j));
                     if (k != 1)
@@ -267,6 +291,25 @@ void printWordle(WordInWordle word)
                     color(INIT);
                     cout << '|';
                 }
+
+                if (i == 0)
+                {
+                    cout << "\t\t\t";
+                    if (k == 1)
+                        cout << " |";
+                    else if (k == 2)
+                        cout << "   |";
+                    else
+                        cout << '|';
+                    for (size_t j = 0; j < tempMap[k].size(); j++)
+                    {
+                        color(word.getInputRecord(tempMap[k][j]));
+                        cout << tempMap[k][j];
+                        color(INIT);
+                        cout << '|';
+                    }
+                }
+                
                 cout << endl;
             }
             cout << "=====================" << endl;
@@ -280,7 +323,7 @@ void runFrame()
     //生成目标单词
     word.init();
     word.wordSpawn();
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < TRIES; i++)
     {
         printWordle(word);
         if (word.getIsWin())
