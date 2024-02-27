@@ -3,7 +3,7 @@
 - And infinitely.
 - If you want to play, just download the zip.
 - Here's the preview:
-        ![alt text](image.png)
+        ![image](https://github.com/OBSERVATER/2nd-project-wordle/assets/155225412/2d2ade69-4a9c-4011-a511-bc0ea84d1015)
 # Introduction
 - In this game, you need to guess the 5-letter hidden word in 6 tries.
 - The background color of the letters changes to show how close you are.
